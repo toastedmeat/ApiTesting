@@ -24,8 +24,8 @@ public class ApiTesting {
 					.field("image_request[language]", "en")
 					.field("image_request[locale]", "en_US")
 					.field("image_request[remote_image_url]",
-							"http://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/"
-									+ "articles/health_tools/extreme_eats_slideshow/getty_rf_photo_of_penne_pasta.jpg")
+							"http://img.webmd.com/dtmcms/live/webmd/consumer_assets" +
+							"/site_images/articles/health_tools/extreme_eats_slideshow/getty_rf_photo_of_penne_pasta.jpg")
 					.asJson();
 
 			jsonObject = new JSONObject(response.getBody().toString());
