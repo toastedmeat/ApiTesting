@@ -23,6 +23,10 @@ public class ApiTestingClarifai {
 					.field("client_id", clientId)
 					.field("client_secret", secret)
 					.asJson();
+			/* Unirest instructions
+			   .header = -H
+			   .field = -d
+			*/
 
 			jsonObject = new JSONObject(response.getBody().toString());
 			token = jsonObject.getString("access_token");
@@ -35,6 +39,8 @@ public class ApiTestingClarifai {
 			System.out.println("expires_in: " + expires_in);
 			System.out.println("scope: " + scope);
 			System.out.println("token_type: " + token_type);
+			
+			// Stub need to finish the request just getting token at this point
 			
 			/*System.out.println("Authorization: Bearer <access_token>" +
 				      "https://api.clarifai.com/v1/tag/?url=http://www.clarifai.com/img/metro-north.jpg");
