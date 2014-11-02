@@ -23,9 +23,28 @@ public class ApiTestingClarifai {
 					.field("client_id", clientId)
 					.field("client_secret", secret)
 					.asJson();
-			/* Unirest instructions
+			/*
+			   Unirest instructions: http://unirest.io/java.html
 			   .header = -H
 			   .field = -d
+			   
+			   jsonObject Instructions
+			   .getString = label for the attribute u want
+			   .getInt = label for attribute u want that is an int
+			   
+			   use .getJSONObject to get a sub object
+			   ex: JSONObject subObject = object.getJSONObject("Example");
+			   to get an array object
+			   JSONArray subArray = subObject.getJSONArray("example");
+			   
+			   then parse the array
+			   String strParsedValue = null;
+			   strParsedValue += "\n Array Length => " + subArray.length();
+			   for(int i=0; i < subArray.length(); i++){
+					strParsedValue+="\n"+subArray.getJSONObject(i).getString("sub1_attr").toString();
+				}
+				
+				Article for JSON Parsing: http://www.technotalkative.com/android-json-parsing/
 			*/
 
 			jsonObject = new JSONObject(response.getBody().toString());
