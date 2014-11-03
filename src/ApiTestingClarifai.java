@@ -1,5 +1,6 @@
 import java.io.IOException;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -12,11 +13,12 @@ public class ApiTestingClarifai {
 	public static void main(String[] args) {
 		HttpResponse<JsonNode> response = null;
 		JSONObject jsonObject = null;
+		JSONArray tags = null, probs = null;
 		String urlToken = "https://api.clarifai.com/v1/token/";
 		String urlTags = "https://api.clarifai.com/v1/tag/";
 		String secret = "vUiBikoM8lQN48kRCSBCh36qA-rYhoIJ1jc6LKkD";
 		String clientId = "-QD9nuVdUiex6jTXuIdEMvbACqM7HR27qgeJabmi";
-		String token = "", scope = "", tokenType = "", tags = "";
+		String token = "", scope = "", tokenType = "";
 		int expires_in = 0;
 		try {
 			/*
@@ -67,43 +69,31 @@ public class ApiTestingClarifai {
 			response = Unirest
 					.post(urlTags)
 					.header("Authorization", tokenType + " " + token)
-					.field("url", "http://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/articles/health_tools/extreme_eats_slideshow/getty_rf_photo_of_penne_pasta.jpg")
-					.asJson();
-			
-			System.out.println(response.getBody());
-			/*
-			
-			
-		 	
-			System.out.println("Authorization: Bearer <access_token>" +
-				      "https://api.clarifai.com/v1/tag/?url=http://www.clarifai.com/img/metro-north.jpg");
-			
-			response = Unirest
-					.get("https://camfind.p.mashape.com/image_responses/" + token)
-					.header("X-Mashape-Key", "5t3yOLRJbFmshGyThqjVJeQI7ZUpp1Rk9ScjsntdT1azJ1xYm2")
+					.field("url", "http://img.webmd.com/dtmcms/" +
+							"live/webmd/consumer_assets/site_images/" +
+							"articles/health_tools/extreme_eats_slideshow/" +
+							"getty_rf_photo_of_penne_pasta.jpg")
 					.asJson();
 			
 			jsonObject = new JSONObject(response.getBody().toString());
-			status = jsonObject.getString("status");
-			while (status.contains("not completed")){
-				try {
-					Thread.sleep(10000);
-					response = Unirest
-							.get("https://camfind.p.mashape.com/image_responses/" + token)
-							.header("X-Mashape-Key", "5t3yOLRJbFmshGyThqjVJeQI7ZUpp1Rk9ScjsntdT1azJ1xYm2")
-							.asJson();
-					jsonObject = new JSONObject(response.getBody().toString());
-					System.out.println(response.getBody());
-					status = jsonObject.getString("status");
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			JSONArray resultsArray = jsonObject.getJSONArray("results");
+			tags = resultsArray
+					.getJSONObject(0)
+					.getJSONObject("result")
+					.getJSONObject("tag")
+					.getJSONArray("classes");
+			probs = resultsArray
+					.getJSONObject(0)
+					.getJSONObject("result")
+					.getJSONObject("tag")
+					.getJSONArray("probs");
+			
+			if(jsonObject.getString("status_code").equals("OK")){
+				System.out.println(tags.toString());
+				System.out.println(probs.toString());
 			}
-			if (jsonObject.has("name")) {
-				tags = jsonObject.getString("name");
-			}
-			System.out.println("status: " + status + "\nTags: " + tags);
-			*/
+			System.out.println(response.getBody());
+			
 			Unirest.shutdown();
 		} catch (UnirestException | IOException e) {
 			e.printStackTrace();
