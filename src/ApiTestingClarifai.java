@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -88,11 +89,22 @@ public class ApiTestingClarifai {
 					.getJSONObject("tag")
 					.getJSONArray("probs");
 			
-			if(jsonObject.getString("status_code").equals("OK")){
-				System.out.println(tags.toString());
-				System.out.println(probs.toString());
+			String parsedTags[] = new String[tags.length()];
+			double parsedProbs[] = new double[probs.length()];
+			DecimalFormat df = new DecimalFormat();
+			df.setMaximumFractionDigits(2);
+			
+			for(int i = 0; i < tags.length(); i++){
+				parsedTags[i] = tags.getString(i);
+				parsedProbs[i] = probs.getDouble(i);
+				System.out.println(parsedTags[i] + " : " + df.format(parsedProbs[i] * 100) + "%");
 			}
-			System.out.println(response.getBody());
+			
+			if(jsonObject.getString("status_code").equals("OK")){
+				//System.out.println(tags.toString());
+				//System.out.println(probs.toString());
+			}
+			//System.out.println(response.getBody());
 			
 			Unirest.shutdown();
 		} catch (UnirestException | IOException e) {
